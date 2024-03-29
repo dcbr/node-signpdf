@@ -110,4 +110,16 @@ describe(Signer, () => {
         const verified = await signer.verify(signature, data);
         expect(verified).toBe(true);
     });
+    it('supports a list of certificates', async () => {
+        const data = Buffer.from('test');
+        const signer = new Signer();
+        signer.signAlgorithm = params.sign;
+        signer.hashAlgorithm = params.hash;
+        signer.getCertificate = () => [Buffer.from(params.cert, 'base64')];
+        signer.getKey = () => Buffer.from(params.key, 'base64');
+        const signature = await signer.sign(data);
+        expect(signature instanceof Buffer).toBe(true);
+        const verified = await signer.verify(signature, data);
+        expect(verified).toBe(true);
+    });
 });
